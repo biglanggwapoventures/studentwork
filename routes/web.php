@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'HomeController@index');
+Route::get('view/{projectId}', 'HomeController@viewProject');
 
 Route::get('register', 'RegistrationController@showRegistrationPage');
 Route::post('register', 'RegistrationController@doRegister');

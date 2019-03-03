@@ -20,22 +20,25 @@
     <div class="row">
         <div class="col-sm-5 offset-sm-2">
             <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title font-weight-bold mb-4">Recent Submissions</h5>
-                    @foreach($projects as $project)
-                        <a href="{{ url("view/{$project->id}") }}" class="d-block mb-1 font-weight-bold" style="font-size:1.2rem">{{ $project->title }}</a>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ $project->authors }}</h6>
-                        <p class="card-text">
-                            {{ str_limit($project->abstract, 250) }}
-                        </p>
-                    @endforeach
+                <div class="card-body border-bottom">
+                    <h5 class="card-title font-weight-bold mb-4">{{ $project->title }}</h5>
+                    <h6 class="card-subtitle mb-2"><strong>Author(s): </strong> {{ $project->authors }}</h6>
+                    <h6 class="card-subtitle mb-4"><strong>Date Submitted: </strong>{{ date_create_immutable($project->date_submitted)->format('F d, Y') }}</h6>
+                    <h6 class="card-subtitle mb-1"><strong>Abstract</strong></h6>
+                    <p class="card-text">{{ $project->abstract }}</p>
+                    <h6 class="card-subtitle mb-2"><strong>Call No.: </strong> {!! $project->call_number ?: '<small class="text-muted">n/a</small>' !!}</h6>
+                    <h6 class="card-subtitle mb-4">
+                        <strong>Keywords: </strong>
+                        <span class="badge badge-pill badge-info text-white">{!! implode('</span> <span class="badge badge-pill badge-info text-white">', explode(',', $project->keywords)) !!}</span>
+                    </h6>
+                    <a href="#" class="btn btn-success px-3">View/Open File</a>
                 </div>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="card">
                 <div class="card-body mt-0">
-
+                    
                 </div>
             </div>
         </div>

@@ -15,4 +15,13 @@ class HomeController extends Controller
             'projects' => $projects
         ]); 
     }
+
+    public function viewProject($projectId)
+    {
+        $project = Project::find($projectId);
+        
+        return view('article', [
+            'project' => $project
+        ]); 
+    }
 }
