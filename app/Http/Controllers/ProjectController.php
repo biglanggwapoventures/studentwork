@@ -21,9 +21,8 @@ class ProjectController extends Controller
 
     public function showCreateProjectPage()
     {
-        $faculty = User::select('id', \DB::raw('CONCAT(lastname, \', \', firstname, \' \', middle_initial, \'.\') AS fullname'))
-            ->where('user_role', User::USER_TYPE_ADVISER)
-            ->orderBy('fullname')
+        $faculty = User::where('user_role', User::USER_TYPE_ADVISER)
+            ->orderBy('lastname')
             ->get();
 
         $areas = Area::orderBy('name')->get();
