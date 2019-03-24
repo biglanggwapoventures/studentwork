@@ -5,6 +5,15 @@
     <div class="row">
         <div class="col-sm-5 offset-md-4">
             <div class="card">
+                @if(session('message'))
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-success">
+                                {{ session('message') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-header d-flex align-items-center justify-content-between">
                     List of all areas
                     <a class="btn btn-success px-3" href="{{ url('areas/create') }}">Create new area</a>
@@ -25,7 +34,12 @@
                                     <td>{{ $area->name }}</td>
                                     <td>
                                         <a href="{{ url("areas/{$area->id}/edit") }}" class="mr-2">Edit</a>
-                                        <a href="#" class="text-danger">Delete</a>
+
+                                        <form id="delete-form" action="{{ url("areas/{$area->id}/delete") }}">
+                                            {{ csrf_field() }}
+                                            <a href="#" onclick="confirmDelete()" class="text-danger">Delete
+                                            </a>
+                                        </form>
                                     </td>
                                 </tr>
                             @empty
@@ -38,3 +52,16 @@
     </div>
 </div>
 @endsection
+@push('js')
+   <script>
+       function confirmDelete() {
+        var x = confirm("Are you sure you want to delete?");
+            if (x){
+                $("#delete-form").submit();
+            }
+            else {
+                return;
+            }
+       }
+   </script>
+@endpush

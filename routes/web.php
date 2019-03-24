@@ -32,21 +32,35 @@ Route::get('projects/create', 'ProjectController@showCreateProjectPage');
  */
 
 Route::group(['namespace' => 'Admin'], function () {
+     
+     // ADVISERS
      // list all advisers
     Route::get('advisers', 'AdviserController@showAdvisersListPage');
-    // show edit adviser page
-    Route::get('advisers/{adviserId}/edit', 'AdviserController@showAdvisersListPage');
     // show create adviser page
     Route::get('advisers/create', 'AdviserController@showCreateAdviserPage');
+    // show edit adviser page
+    Route::get('advisers/{adviserId}/edit', 'AdviserController@showEditAdviserPage');
+    
     // create new adviser
     Route::post('advisers', 'AdviserController@doCreateAdviser');
+    // update new adviser
+    Route::post('advisers/{adviserId}/update', 'AdviserController@doUpdateAdviser');
+    // delete new adviser
+    Route::get('advisers/{adviserId}/delete', 'AdviserController@doDeleteAdviser');
 
-     // list all advisers
+     // AREAS
+     // list all areas
      Route::get('areas', 'AreaController@showAreasListPage');
-     // show edit adviser page
-     Route::get('areas/{areaId}/edit', 'AreaController@showEditAreaPage');
-     // show create adviser page
+     // show create area page
      Route::get('areas/create', 'AreaController@showCreateAreaPage');
-     // create new adviser
+     // show edit area page
+     Route::get('areas/{areaId}/edit', 'AreaController@showEditAreaPage');
+
+     // create new area
      Route::post('areas', 'AreaController@doCreateArea');
+     // update area
+     Route::post('areas/{areaId}/update', 'AreaController@doUpdateArea');
+     // delete area
+     Route::get('areas/{areaId}/delete', 'AreaController@doDeleteArea');
+
 });

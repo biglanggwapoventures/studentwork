@@ -22,7 +22,7 @@ class LoginController extends Controller
         $loggedIn = Auth::attempt($credentials);
 
         if($loggedIn){
-            return redirect('home')->with('message', "Welcome, {$loggedIn['firstname']}!");
+            return redirect('/')->with('loginMessage', "Welcome, {$credentials['username']}!");
         }
     }
 }

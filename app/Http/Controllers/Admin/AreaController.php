@@ -44,7 +44,7 @@ class AreaController extends Controller
         return redirect('areas')->with('message', 'New area successfully created!');
     }
 
-    public function doEditArea(Request $request, $areaId)
+    public function doUpdateArea(Request $request, $areaId)
     {
         $request->validate([
             'name' => [
@@ -59,5 +59,14 @@ class AreaController extends Controller
         $area->save();
 
         return redirect('areas')->with('message', 'Area has been successfully updated!');
+    }
+
+    public function doDeleteArea($id)
+    {
+        $area = Area::find($id);
+
+        $area->delete();
+
+        return redirect('areas')->with('message', 'Area deleted successfully!');
     }
 }

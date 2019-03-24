@@ -59,9 +59,11 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ url('logout') }}">
-                                        Logout
-                                    </a>
+                                    <form id="logout-form" action="{{ url('logout') }}">
+                                        <a class="dropdown-item" href="#" onclick="confirmLogout()" class="text-danger">
+                                            Logout
+                                        </a>
+                                    </form>
                                 </div>
                             </li>
                         @endguest
@@ -70,9 +72,31 @@
             </div>
         </nav>
 
+        @if(session('loginMessage'))
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="alert alert-success">
+                        {{ session('loginMessage') }}
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <main>
             @yield('content')
         </main>
     </div>
 </body>
+@stack('js')
+<script>
+    function confirmLogout() {
+    var x = confirm("Are you sure you want to logout?");
+        if (x){
+            $("#logout-form").submit();
+        }
+        else {
+            return;
+        }
+    }
+</script>
 </html>
