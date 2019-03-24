@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Project;
-use App\User;
-use App\Area;
 use Auth;
+use App\Area;
+use App\User;
+use App\Project;
+use Spatie\PdfToImage\Pdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -29,58 +32,75 @@ class ProjectController extends Controller
 
         return view('projects.create', [
             'faculty' => $faculty,
-            'areas' => $areas
+            'areas'   => $areas
         ]);
     }
 
     public function doCreateProject(Request $request)
     {
         $rules = [
-            'doi' => 'nullable|string',
-            'title' => 'required|string',
-            'authors' => 'required|string',
-            'abstract' => 'required|string',
-            'adviser_id' => 'required|exists:users,id',
-            'area_id' => 'required|exists:areas,id',
-            'panel_ids' => 'required|array',
-            'panel_ids.*' => 'required|exists:users,id|distinct',
-            'keywords' => 'required|string',
-            'pages' => 'required|integer',
+            'doi'            => 'nullable|string',
+            'title'          => 'required|string',
+            'authors'        => 'required|string',
+            'abstract'       => 'required|string',
+            'adviser_id'     => 'required|exists:users,id',
+            'area_id'        => 'required|exists:areas,id',
+            'panel_ids'      => 'required|array',
+            'panel_ids.*'    => 'required|exists:users,id|distinct',
+            'keywords'       => 'required|string',
+            'pages'          => 'required|integer',
             'year_published' => 'required|date_format:Y',
-            'file' => 'required|file',
+            'file'           => 'required|mimes:pdf',
         ];
 
-        if(Auth::user()->isRole(User::USER_TYPE_ADMIN)){
+        if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
             $rules += [
-                'call_number' => 'required|exists:areas,id',
+                'call_number'    => 'required|exists:areas,id',
                 'date_submitted' => 'required|date|before:tomorrow',
             ];
         }
 
         \DB::transaction(function () use ($request, $rules) {
+            $request->validate($rules);
 
-            $request->validate($rules); 
-
-            $project = new Project();
-            $project->doi = $request->input('doi');
-            $project->title = $request->input('title');
-            $project->authors = $request->input('authors');
-            $project->abstract = $request->input('abstract');
-            $project->adviser_id = $request->input('adviser_id');
-            $project->area_id = $request->input('area_id');
-            $project->keywords = $request->input('keywords');
-            $project->pages = $request->input('pages');
-            $project->year_published = $request->input('year_published');
-            $project->uploaded_file_path =  $request->file('file')->store(
-                $request->user()->id, 'public'
-            );
+            $project                     = new Project();
+            $project->doi                = $request->input('doi');
+            $project->title              = $request->input('title');
+            $project->authors            = $request->input('authors');
+            $project->abstract           = $request->input('abstract');
+            $project->adviser_id         = $request->input('adviser_id');
+            $project->area_id            = $request->input('area_id');
+            $project->keywords           = $request->input('keywords');
+            $project->pages              = $request->input('pages');
+            $project->year_published     = $request->input('year_published');
+            $project->uploaded_file_path =  $request->file('file')->store($request->user()->id, 'public');
 
             $project->save();
-
             $project->panel()->attach($request->input('panel_ids'));
+
+            $this->saveImagePreviews($project->uploaded_file_path);
+
         });
 
         return redirect('projects')->with('message', 'New project has been successfully created!');
-
     }
+
+
+    protected function saveImagePreviews($filePath)
+    {
+        $storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
+        $file = new \Imagick($storagePath.$filePath);
+        $lastIndex = $file->getNumberImages() > 5 ? 4 : ($file->getNumberImages() - 1);
+
+        foreach (range(0, $lastIndex) as $index) {
+            $page = $index + 1;
+            $file->setIteratorIndex($index);
+            $file->setImageFormat('png');
+            $filename = Str::replaceLast('.pdf', "-page-{$page}.png", $filePath);
+            Storage::disk('public')->put($filename, $file);
+        }
+
+        return true;
+    }
+
 }

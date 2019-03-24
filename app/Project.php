@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
+    const VIEWABLE_NUMBER_OF_PAGES = 5;
+
     protected $fillable = [
         'title',
         'authors',
@@ -34,4 +38,20 @@ class Project extends Model
     {
         return $this->belongsToMany(User::class, 'project_panel', 'project_id', 'panel_id');
     }
+
+
+    public function getPreviewsFilePath()
+    {
+        $files = [];
+
+        foreach (range(1,5) as $page) {
+            $filePath = Str::replaceLast('.pdf', "-page-{$page}.png", $this->uploaded_file_path);
+            if(Storage::disk('public')->exists($filePath)) {
+                $files[] = asset("storage/{$filePath}");
+            }
+        }
+        
+        return $files;
+    }
+    
 }

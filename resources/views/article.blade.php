@@ -31,14 +31,23 @@
                         <strong>Keywords: </strong>
                         <span class="badge badge-pill badge-info text-white">{!! implode('</span> <span class="badge badge-pill badge-info text-white">', explode(',', $project->keywords)) !!}</span>
                     </h6>
-                    <a href="#" class="btn btn-success px-3">View/Open File</a>
+                    <div class="row">
+                        @forelse($project->getPreviewsFilePath() as $preview)
+                            <div class="col-2">
+                                <a data-fancybox="gallery" href="{{ $preview }}">
+                                    <img class="img-fluid border rounded" src="{{ $preview }}" alt="{{ $project->title }} preview page {{ $loop->iteration }}" >
+                                </a>
+                            </div>
+                        @empty
+                            No resource
+                        @endforelse
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="card">
                 <div class="card-body mt-0">
-                    
                 </div>
             </div>
         </div>

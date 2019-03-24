@@ -30,7 +30,7 @@
                                     <td>{{ $adviser->middle_initial }}</td>
                                     <td>{{ $adviser->username }}</td>
                                     <td>
-                                        <a href="#" class="mr-2">Edit</a>
+                                        <a href="{{ url("advisers/{$adviser->id}/edit") }}" class="mr-2">Edit</a>
                                         <a href="#" class="text-danger">Delete</a>
                                     </td>
                                 </tr>

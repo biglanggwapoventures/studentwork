@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Auth;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -21,8 +21,8 @@ class LoginController extends Controller
 
         $loggedIn = Auth::attempt($credentials);
 
-        if($loggedIn){
-            return redirect('home')->with('message', "Welcome, {$loggedIn['firstname']}!");
+        if ($loggedIn) {
+            return redirect('/')->with('message', "Welcome, {$loggedIn['firstname']}!");
         }
     }
 }
