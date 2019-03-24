@@ -97,7 +97,6 @@ class ProjectController extends Controller
             $page = $index + 1;
             $file->setIteratorIndex($index);
             $file->setCompression(\Imagick::COMPRESSION_JPEG);
-            $file->setCompressionQuality(100);
             $file->setImageFormat("jpeg");
             $filename = Str::replaceLast('.pdf', "-page-{$page}.jpg", $filePath);
             Storage::disk('public')->put($filename, $file);
