@@ -32,6 +32,7 @@
                         <span class="badge badge-pill badge-info text-white">{!! implode('</span> <span class="badge badge-pill badge-info text-white">', explode(',', $project->keywords)) !!}</span>
                     </h6>
                     <div class="row">
+                        <div class="col-1">&nbsp;</div>
                         @forelse($project->getPreviewsFilePath() as $preview)
                             <div class="col-2">
                                 <a data-fancybox="gallery" href="{{ $preview }}">
