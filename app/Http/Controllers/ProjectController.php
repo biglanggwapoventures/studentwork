@@ -90,15 +90,16 @@ class ProjectController extends Controller
     {
         $storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
         $file = new \Imagick($storagePath.$filePath);
-        $file->setImageBackgroundColor('#ffffff');
-        // $file->setImageCompressionQuality(90); 
         $lastIndex = $file->getNumberImages() > 5 ? 4 : ($file->getNumberImages() - 1);
+
 
         foreach (range(0, $lastIndex) as $index) {
             $page = $index + 1;
             $file->setIteratorIndex($index);
-            $file->setImageFormat('jpeg');
-            $filename = Str::replaceLast('.pdf', "-page-{$page}.jpeg", $filePath);
+            $file->setCompression(\Imagick::COMPRESSION_JPEG);
+            $file->setCompressionQuality(100);
+            $file->setImageFormat("jpeg");
+            $filename = Str::replaceLast('.pdf', "-page-{$page}.jpg", $filePath);
             Storage::disk('public')->put($filename, $file);
         }
 

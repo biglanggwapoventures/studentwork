@@ -45,7 +45,7 @@ class Project extends Model
         $files = [];
 
         foreach (range(1,5) as $page) {
-            $filePath = Str::replaceLast('.pdf', "-page-{$page}.jpeg", $this->uploaded_file_path);
+            $filePath = Str::replaceLast('.pdf', "-page-{$page}.jpg", $this->uploaded_file_path);
             if(Storage::disk('public')->exists($filePath)) {
                 $files[] = asset("storage/{$filePath}");
             }
