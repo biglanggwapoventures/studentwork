@@ -40,7 +40,6 @@
                                     <td>{{ $adviser->username }}</td>
                                     <td>
                                         <a href="{{ url("advisers/{$adviser->id}/edit") }}" class="mr-2">Edit</a>
-
                                         <form id="delete-form" action="{{ url("advisers/{$adviser->id}/delete") }}">
                                             {{ csrf_field() }}
                                             <a href="#" onclick="confirmDelete()" class="text-danger">Delete

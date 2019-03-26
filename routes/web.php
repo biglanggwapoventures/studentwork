@@ -26,12 +26,14 @@ Route::get('projects', 'ProjectController@showProjectsListPage');
 Route::post('projects', 'ProjectController@doCreateProject');
 Route::get('projects/create', 'ProjectController@showCreateProjectPage');
 
+Route::get('projects/pdf', 'ProjectController@showPdf');
 
 /**
  * ADMIN ROUTES
  */
 
 Route::group(['namespace' => 'Admin'], function () {
+
      
      // ADVISERS
      // list all advisers
@@ -43,6 +45,7 @@ Route::group(['namespace' => 'Admin'], function () {
     
     // create new adviser
     Route::post('advisers', 'AdviserController@doCreateAdviser');
+
     // update new adviser
     Route::post('advisers/{adviserId}/update', 'AdviserController@doUpdateAdviser');
     // delete new adviser
