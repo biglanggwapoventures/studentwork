@@ -33,23 +33,37 @@ Route::get('projects/pdf', 'ProjectController@showPdf');
  */
 
 Route::group(['namespace' => 'Admin'], function () {
-    // list all advisers
+
+     
+     // ADVISERS
+     // list all advisers
     Route::get('advisers', 'AdviserController@showAdvisersListPage');
-    // show edit adviser page
-    Route::get('advisers/{teacherId}/edit', 'AdviserController@showEditAdviserPage');
     // show create adviser page
     Route::get('advisers/create', 'AdviserController@showCreateAdviserPage');
+    // show edit adviser page
+    Route::get('advisers/{adviserId}/edit', 'AdviserController@showEditAdviserPage');
+    
     // create new adviser
     Route::post('advisers', 'AdviserController@doCreateAdviser');
-    // edit adviser
-    Route::post('advisers/{teacherId}', 'AdviserController@doEditAdviser');
 
-    // list all advisers
-    Route::get('areas', 'AreaController@showAreasListPage');
-    // show edit adviser page
-    Route::get('areas/{areaId}/edit', 'AreaController@showEditAreaPage');
-    // show create adviser page
-    Route::get('areas/create', 'AreaController@showCreateAreaPage');
-    // create new adviser
-    Route::post('areas', 'AreaController@doCreateArea');
+    // update new adviser
+    Route::post('advisers/{adviserId}/update', 'AdviserController@doUpdateAdviser');
+    // delete new adviser
+    Route::get('advisers/{adviserId}/delete', 'AdviserController@doDeleteAdviser');
+
+     // AREAS
+     // list all areas
+     Route::get('areas', 'AreaController@showAreasListPage');
+     // show create area page
+     Route::get('areas/create', 'AreaController@showCreateAreaPage');
+     // show edit area page
+     Route::get('areas/{areaId}/edit', 'AreaController@showEditAreaPage');
+
+     // create new area
+     Route::post('areas', 'AreaController@doCreateArea');
+     // update area
+     Route::post('areas/{areaId}/update', 'AreaController@doUpdateArea');
+     // delete area
+     Route::get('areas/{areaId}/delete', 'AreaController@doDeleteArea');
+
 });
