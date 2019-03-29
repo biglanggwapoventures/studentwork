@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Validation\Rule;
 use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class AdviserController extends Controller
 {
@@ -25,31 +25,31 @@ class AdviserController extends Controller
         return view('advisers.create');
     }
 
-    public function showEditAdviserPage($adviserId)
+    public function showEditAdviserPage($teacherId)
     {
-        $adviser = User::find($adviserId);
+        $teacher = User::find($teacherId);
 
         return view('advisers.edit', [
-            'adviser' => $adviser
+            'teacher' => $teacher
         ]);
     }
 
     public function doCreateAdviser(Request $request)
     {
         $request->validate([
-            'firstname' => 'required|string|max:200',
-            'lastname' => 'required|string|max:200',
+            'firstname'      => 'required|string|max:200',
+            'lastname'       => 'required|string|max:200',
             'middle_initial' => 'required|string|size:1',
-            'username'=> 'required|string|unique:users,username',
+            'username'       => 'required|string|unique:users,username',
         ]);
 
-        $adviser = new User();
-        $adviser->firstname = $request->input('firstname');
-        $adviser->lastname = $request->input('lastname');
+        $adviser                 = new User();
+        $adviser->firstname      = $request->input('firstname');
+        $adviser->lastname       = $request->input('lastname');
         $adviser->middle_initial = $request->input('middle_initial');
-        $adviser->username = $request->input('username');
-        $adviser->password = bcrypt($adviser::USER_DEFAULT_PASSWORRD);
-        $adviser->user_role = $adviser::USER_TYPE_ADVISER;
+        $adviser->username       = $request->input('username');
+        $adviser->password       = bcrypt($adviser::USER_DEFAULT_PASSWORRD);
+        $adviser->user_role      = $adviser::USER_TYPE_ADVISER;
         $adviser->save();
 
         return redirect('advisers')->with('message', 'New adviser created successfully!');

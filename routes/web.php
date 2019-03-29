@@ -26,6 +26,7 @@ Route::get('projects', 'ProjectController@showProjectsListPage');
 Route::post('projects', 'ProjectController@doCreateProject');
 Route::get('projects/create', 'ProjectController@showCreateProjectPage');
 
+Route::get('projects/pdf', 'ProjectController@showPdf');
 
 /**
  * ADMIN ROUTES
