@@ -44,6 +44,10 @@ Route::group(['namespace' => 'Admin'], function () {
     
     // create new adviser
     Route::post('advisers', 'AdviserController@doCreateAdviser');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 718820390e8f4c1f1b59407a0e153adfc7572513
     // update new adviser
     Route::post('advisers/{adviserId}/update', 'AdviserController@doUpdateAdviser');
     // delete new adviser
