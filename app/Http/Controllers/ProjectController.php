@@ -15,10 +15,29 @@ class ProjectController extends Controller
 {
     public function showProjectsListPage(Request $request)
     {
-        $projects = Project::with(['adviser', 'area'])->get();
+        $projects = Project::with(['adviser', 'area', 'authors'])->get();
 
         return view('projects.index', [
             'projects' => $projects
+        ]);
+    }
+
+    public function showEditProjectPage(Project $project)
+    {
+        $project->load(['adviser', 'area', 'authors']);
+
+        $faculty = User::where('user_role', User::USER_TYPE_ADVISER)
+            ->orderBy('lastname')
+            ->get();
+
+        $areas = Area::orderBy('name')->get();
+        $students = User::ofType(User::USER_TYPE_STUDENT)->get();
+
+        return view('projects.edit', [
+            'project' => $project,
+            'faculty' => $faculty,
+            'areas'   => $areas,
+            'students' => $students
         ]);
     }
 
@@ -29,10 +48,12 @@ class ProjectController extends Controller
             ->get();
 
         $areas = Area::orderBy('name')->get();
+        $students = User::ofType(User::USER_TYPE_STUDENT)->get();
 
         return view('projects.create', [
             'faculty' => $faculty,
-            'areas'   => $areas
+            'areas'   => $areas,
+            'students' => $students
         ]);
     }
 
@@ -41,7 +62,8 @@ class ProjectController extends Controller
         $rules = [
             'doi'            => 'nullable|string',
             'title'          => 'required|string',
-            'authors'        => 'required|string',
+            'author_ids'      => 'required|array',
+            'author_ids.*'    => 'required|exists:users,id|distinct',
             'abstract'       => 'required|string',
             'adviser_id'     => 'required|exists:users,id',
             'area_id'        => 'required|exists:areas,id',
@@ -66,7 +88,6 @@ class ProjectController extends Controller
             $project                     = new Project();
             $project->doi                = $request->input('doi');
             $project->title              = $request->input('title');
-            $project->authors            = $request->input('authors');
             $project->abstract           = $request->input('abstract');
             $project->adviser_id         = $request->input('adviser_id');
             $project->area_id            = $request->input('area_id');
@@ -77,12 +98,73 @@ class ProjectController extends Controller
 
             $project->save();
             $project->panel()->attach($request->input('panel_ids'));
+            $project->authors()->attach($request->input('author_ids'));
 
             $this->saveImagePreviews($project->uploaded_file_path);
 
         });
 
         return redirect('projects')->with('message', 'New project has been successfully created!');
+    }
+
+    public function doEditProject(Project $project, Request $request)
+    {
+        if(
+            $project->is('rejected') // rejecte projects cannot be edited
+            ||( $project->is('approved') && !Auth::user()->isRole('admin')) // approved projects can only be edited by admin
+        ){
+            return redirect()->back();
+        }
+        
+
+        $rules = [
+            'doi'            => 'nullable|string',
+            'title'          => 'required|string',
+            'author_ids'      => 'required|array',
+            'author_ids.*'    => 'required|exists:users,id|distinct',
+            'abstract'       => 'required|string',
+            'adviser_id'     => 'required|exists:users,id',
+            'area_id'        => 'required|exists:areas,id',
+            'panel_ids'      => 'required|array',
+            'panel_ids.*'    => 'required|exists:users,id|distinct',
+            'keywords'       => 'required|string',
+            'pages'          => 'required|integer',
+            'year_published' => 'required|date_format:Y',
+            'file'           => 'nullable|mimes:pdf',
+        ];
+
+        if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
+            $rules += [
+                'call_number'    => 'required|exists:areas,id',
+                'date_submitted' => 'required|date|before:tomorrow',
+            ];
+        }
+
+        \DB::transaction(function () use ($request, $rules, $project) {
+            $request->validate($rules);
+            
+            $project->doi                = $request->input('doi');
+            $project->title              = $request->input('title');
+            $project->abstract           = $request->input('abstract');
+            $project->adviser_id         = $request->input('adviser_id');
+            $project->area_id            = $request->input('area_id');
+            $project->keywords           = $request->input('keywords');
+            $project->pages              = $request->input('pages');
+            $project->year_published     = $request->input('year_published');
+
+            if($request->hasFile('file')){
+                $project->uploaded_file_path = $request->file('file')->store($request->user()->id, 'public');
+                $this->saveImagePreviews($project->uploaded_file_path);
+            }
+            
+
+            $project->save();
+            $project->panel()->sync($request->input('panel_ids'));
+            $project->authors()->sync($request->input('author_ids'));
+
+        });
+
+        return redirect('projects')->with('message', 'Project has been successfully updated!');
     }
 
 

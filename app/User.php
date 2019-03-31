@@ -56,4 +56,19 @@ class User extends Authenticatable
     {
         return "{$this->lastname}, {$this->firstname} {$this->middle_initial}.";
     }
+
+    public function scopeOfType($query, string $type)
+    {
+        return $query->where('user_role', $type);
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_authors', 'author_id', 'project_id');
+    }
+
+    public function handledProjects()
+    {
+        return $this->hasMany(Project::class, 'adviser_id');
+    }
 }

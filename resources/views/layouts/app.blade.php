@@ -10,12 +10,13 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('fancybox/jquery.fancybox.min.js') }}" defer></script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fancybox/jquery.fancybox.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -32,15 +33,30 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('advisers') }}">Teachers</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('areas') }}">Areas</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('projects') }}">Projects</a>
-                            </li>
+                            @if(Auth::user()->isRole('admin'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('advisers') }}">Teachers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('areas') }}">Areas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('projects') }}">Projects</a>
+                                </li>
+                            @endif
+
+                            @if(Auth::user()->isRole('student'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('my-projects') }}">My Projects</a>
+                                </li>
+                            @endif
+
+                            @if(Auth::user()->isRole('adviser'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ url('my-handled-projects') }}">Handled Projects</a>
+                                </li>
+                            @endif
+
                         @endif
                     </ul>
 
@@ -76,5 +92,7 @@
             @yield('content')
         </main>
     </div>
+
+    @stack('js')
 </body>
 </html>

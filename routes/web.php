@@ -25,6 +25,8 @@ Route::get('logout', 'LogoutController@doLogout');
 Route::get('projects', 'ProjectController@showProjectsListPage');
 Route::post('projects', 'ProjectController@doCreateProject');
 Route::get('projects/create', 'ProjectController@showCreateProjectPage');
+Route::get('projects/{project}/edit', 'ProjectController@showEditProjectPage');
+Route::put('projects/{project}', 'ProjectController@doEditProject');
 
 Route::get('projects/pdf', 'ProjectController@showPdf');
 
@@ -52,4 +54,21 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::get('areas/create', 'AreaController@showCreateAreaPage');
     // create new adviser
     Route::post('areas', 'AreaController@doCreateArea');
+});
+
+
+
+/** ROUTES FOR STUDENTS */
+
+Route::group(['namespace' => 'User'], function () {
+    Route::get('my-projects', 'MyProjectsController');
+});
+
+
+/** ROUTES FOR ADVIDERS */
+
+Route::group(['namespace' => 'Adviser'], function () {
+    Route::get('my-handled-projects', 'HandledProjectsController@index');
+    Route::get('my-handled-projects/{project}', 'HandledProjectsController@show');
+    Route::put('my-handled-projects/{project}', 'HandledProjectsController@update');
 });

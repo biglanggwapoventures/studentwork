@@ -24,5 +24,7 @@ class LoginController extends Controller
         if ($loggedIn) {
             return redirect('/')->with('message', "Welcome, {$loggedIn['firstname']}!");
         }
+
+        return redirect()->back();
     }
 }

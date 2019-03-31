@@ -12,7 +12,6 @@ class Project extends Model
 
     protected $fillable = [
         'title',
-        'authors',
         'abtract',
         'adviser_id',
         'area_id',
@@ -21,8 +20,13 @@ class Project extends Model
         'keywords',
         'pages',
         'year_published',
-        'uploaded_file_path'
+        'uploaded_file_path',
+        'project_status'
     ];
+    
+    protected $appends = [
+        'keywords_collection'
+    ];  
 
     public function area()
     {
@@ -52,6 +56,31 @@ class Project extends Model
         }
         
         return $files;
+    }
+
+    public function getKeywordsCollectionAttribute()
+    {
+        return collect(explode(',', $this->keywords))
+            ->filter()
+            ->map(function ($item) {
+                return trim($item);
+            })
+            ->unique();
+    }
+
+    public function authors()
+    {
+        return $this->belongsToMany(User::class, 'project_authors', 'project_id', 'author_id');
+    }
+
+    public function is($status)
+    {
+        return $this->project_status === $status;
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('project_status', 'approved');
     }
     
 }

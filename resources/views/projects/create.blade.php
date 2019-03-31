@@ -34,8 +34,12 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Author(s)</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" name="authors" value="{{ old('authors') }}" placeholder="Enter Author(s) Full Name">
-                                <span class="form-text text-muted">Separate each name by commas. (Jose Rizal, Rodrigo Duterte, John Doe)</span>
+                                <select name="author_ids[]" class="form-control select2" multiple data-maximum-selection-length="3" data-allow-clear="true">
+                                    <option disabled>SELECT AUTHOR(S)</option>
+                                    @foreach($students AS $student)
+                                        <option value="{{ $student->id }}" {{ in_array($student->id, (array)old('author_ids')) ? 'selected="selected"' : '' }}>{{ $student->fullname }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group row">
@@ -69,7 +73,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if(!Auth::user()->isRole(\App\User::USER_TYPE_STUDENT))
+                            @if(Auth::user()->isRole('admin'))
                             <div class="col-sm-4">
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Call #</label>

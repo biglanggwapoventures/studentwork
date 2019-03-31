@@ -16,6 +16,7 @@
                                 <th></th>
                                 <th>Project Title</th>
                                 <th>Authors</th>
+                                <th>Panel</th>
                                 <th>Adviser</th>
                                 <th>Area</th>
                                 <th>Call Number</th>
@@ -29,15 +30,33 @@
                                     <td>{{ $project->title }}</td>
                                     <td>
                                         <ol class="pl-3">
-                                            <li>{!! implode('</li><li>', explode(',', $project->authors)) !!}</li>
+                                            <li>{!! $project->authors->implode('fullname', '</li><li>') !!}</li>
+                                        </ol>
+                                    </td>
+                                    <td>
+                                        <ol class="pl-3">
+                                            <li>{!! $project->panel->implode('fullname', '</li><li>') !!}</li>
                                         </ol>
                                     </td>
                                     <td>{{ $project->adviser->fullname }}</td>
                                     <td>{{ $project->area->name }}</td>
                                     <td>{{ $project->call_number ?: 'N/A' }}</td>
                                     <td>
-                                        <a href="{{ url("areas/{$project->id}/edit") }}" class="mr-2">Edit</a>
-                                        <a href="#" class="text-danger">Delete</a>
+                                        @if($project->is('pending'))
+                                            <span class="d-block badge badge-secondary text-white mb-3">PENDING</span>
+                                        @elseif($project->is('rejected'))
+                                            <span class="d-block badge badge-danger text-white mb-3">REJECTED</span>
+                                        @else
+                                            <span class="d-block badge badge-success text-white mb-3">APPROVED</span>
+                                        @endif
+
+                                        @if(Auth::user()->isRole('adviser'))
+                                            <a href="{{ url("my-handled-projects/{$project->id}") }}" class="mr-2">Review</a>
+                                        @else
+                                            <a href="{{ url("projects/{$project->id}/edit") }}" class="mr-2">Edit</a>
+                                            <a href="#" class="text-danger">Delete</a>
+                                        @endif
+                                        
                                     </td>
                                 </tr>
                             @empty
