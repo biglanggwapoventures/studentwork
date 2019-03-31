@@ -14,6 +14,15 @@
                         </div>
                     </div>
                 @endif
+                @if(session('errorMessage'))
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger">
+                                {{ session('errorMessage') }}
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="card-header d-flex align-items-center justify-content-between">
                     List of all areas
                     <a class="btn btn-success px-3" href="{{ url('areas/create') }}">Create new area</a>
@@ -35,9 +44,10 @@
                                     <td>
                                         <a href="{{ url("areas/{$area->id}/edit") }}" class="mr-2">Edit</a>
 
-                                        <form id="delete-form" action="{{ url("areas/{$area->id}/delete") }}">
+                                        <form class="delete-form" method="POST" action="{{ url("areas/{$area->id}/delete") }}">
                                             {{ csrf_field() }}
-                                            <a href="#" onclick="confirmDelete()" class="text-danger">Delete
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <a href="#" onclick="confirmDelete(this)" class="text-danger">Delete
                                             </a>
                                         </form>
                                     </td>
@@ -54,10 +64,11 @@
 @endsection
 @push('js')
    <script>
-       function confirmDelete() {
+       function confirmDelete(btn) {
+        var form = $(btn).closest('form');
         var x = confirm("Are you sure you want to delete?");
             if (x){
-                $("#delete-form").submit();
+                form.submit();
             }
             else {
                 return;

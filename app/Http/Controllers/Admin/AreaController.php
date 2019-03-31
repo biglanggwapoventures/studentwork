@@ -65,8 +65,12 @@ class AreaController extends Controller
     {
         $area = Area::find($id);
 
-        $area->delete();
+        try {
+            $area->delete();
+            return redirect('areas')->with('message', 'Area deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect('areas')->with('errorMessage', 'Area not deleted successfully!');
+        }
 
-        return redirect('areas')->with('message', 'Area deleted successfully!');
     }
 }
