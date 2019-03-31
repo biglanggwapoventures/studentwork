@@ -21,8 +21,8 @@ class LoginController extends Controller
 
         $loggedIn = Auth::attempt($credentials);
 
-        if ($loggedIn) {
-            return redirect('/')->with('message', "Welcome, {$loggedIn['firstname']}!");
+        if($loggedIn){
+            return redirect('/')->with('loginMessage', "Welcome, {$credentials['username']}!");
         }
 
         return redirect()->back();
