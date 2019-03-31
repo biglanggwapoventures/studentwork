@@ -33,7 +33,6 @@ Route::get('projects/pdf', 'ProjectController@showPdf');
  */
 
 Route::group(['namespace' => 'Admin'], function () {
-
      
      // ADVISERS
      // list all advisers
@@ -45,11 +44,10 @@ Route::group(['namespace' => 'Admin'], function () {
     
     // create new adviser
     Route::post('advisers', 'AdviserController@doCreateAdviser');
-
     // update new adviser
     Route::post('advisers/{adviserId}/update', 'AdviserController@doUpdateAdviser');
     // delete new adviser
-    Route::get('advisers/{adviserId}/delete', 'AdviserController@doDeleteAdviser');
+    Route::delete('advisers/{adviserId}/delete', 'AdviserController@doDeleteAdviser');
 
      // AREAS
      // list all areas
@@ -64,6 +62,6 @@ Route::group(['namespace' => 'Admin'], function () {
      // update area
      Route::post('areas/{areaId}/update', 'AreaController@doUpdateArea');
      // delete area
-     Route::get('areas/{areaId}/delete', 'AreaController@doDeleteArea');
+     Route::delete('areas/{areaId}/delete', 'AreaController@doDeleteArea');
 
 });
