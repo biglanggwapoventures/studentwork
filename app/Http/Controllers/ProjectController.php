@@ -6,17 +6,22 @@ use Auth;
 use App\Area;
 use App\User;
 use App\Project;
-use Spatie\PdfToImage\Pdf;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
     public function showProjectsListPage(Request $request)
     {
-        $projects = Project::with(['adviser', 'area', 'authors'])->get();
+        $projects = Project::with(['adviser', 'area', 'authors'])
+            ->when(Auth::user()->isRole(User::USER_TYPE_ADMIN), function (Builder $builder) {
+                return $builder->where('project_status', '=', 'approved');
+            })
+            ->get();
 
         return view('projects.index', [
             'projects' => $projects
@@ -31,13 +36,13 @@ class ProjectController extends Controller
             ->orderBy('lastname')
             ->get();
 
-        $areas = Area::orderBy('name')->get();
+        $areas    = Area::orderBy('name')->get();
         $students = User::ofType(User::USER_TYPE_STUDENT)->get();
 
         return view('projects.edit', [
-            'project' => $project,
-            'faculty' => $faculty,
-            'areas'   => $areas,
+            'project'  => $project,
+            'faculty'  => $faculty,
+            'areas'    => $areas,
             'students' => $students
         ]);
     }
@@ -48,12 +53,12 @@ class ProjectController extends Controller
             ->orderBy('lastname')
             ->get();
 
-        $areas = Area::orderBy('name')->get();
+        $areas    = Area::orderBy('name')->get();
         $students = User::ofType(User::USER_TYPE_STUDENT)->get();
 
         return view('projects.create', [
-            'faculty' => $faculty,
-            'areas'   => $areas,
+            'faculty'  => $faculty,
+            'areas'    => $areas,
             'students' => $students
         ]);
     }
@@ -61,19 +66,19 @@ class ProjectController extends Controller
     public function doCreateProject(Request $request)
     {
         $rules = [
-            'doi'            => 'nullable|string',
-            'title'          => 'required|string',
+            'doi'             => 'nullable|string',
+            'title'           => 'required|string',
             'author_ids'      => 'required|array',
             'author_ids.*'    => 'required|exists:users,id|distinct',
-            'abstract'       => 'required|string',
-            'adviser_id'     => 'required|exists:users,id',
-            'area_id'        => 'required|exists:areas,id',
-            'panel_ids'      => 'required|array',
-            'panel_ids.*'    => 'required|exists:users,id|distinct',
-            'keywords'       => 'required|string',
-            'pages'          => 'required|integer',
-            'year_published' => 'required|date_format:Y',
-            'file'           => 'required|mimes:pdf',
+            'abstract'        => 'required|string',
+            'adviser_id'      => ['required', 'exists:users,id', Rule::notIn($request->input('panel_ids', []))],
+            'area_id'         => 'required|exists:areas,id',
+            'panel_ids'       => 'required|array',
+            'panel_ids.*'     => 'required|exists:users,id|distinct',
+            'keywords'        => 'required|string',
+            'pages'           => 'required|integer',
+            'year_published'  => 'required|date_format:Y',
+            'file'            => 'required|mimes:pdf',
         ];
 
         if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
@@ -84,7 +89,9 @@ class ProjectController extends Controller
         }
 
         \DB::transaction(function () use ($request, $rules) {
-            $request->validate($rules);
+            $request->validate($rules, [
+                'adviser_id.not_in' => 'The adviser cannot be present in the panel list'
+            ]);
 
             $project                     = new Project();
             $project->doi                = $request->input('doi');
@@ -100,7 +107,7 @@ class ProjectController extends Controller
                 $project->call_number = $request->input('call_number');
                 $project->date_submitted = $request->input('date_submitted');
             }
-            
+
             $project->uploaded_file_path =  $request->file('file')->store($request->user()->id, 'public');
 
             $project->save();
@@ -108,40 +115,38 @@ class ProjectController extends Controller
             $project->authors()->attach($request->input('author_ids'));
 
             $this->saveImagePreviews($project->uploaded_file_path);
-
         });
 
-        $redirect = Auth::user()->isRole('student') 
+        $redirect = Auth::user()->isRole('student')
          ? redirect('my-projects')
          : redirect('projects');
 
-         return $redirect->with('message', 'New project has been successfully created!');
+        return $redirect->with('message', 'New project has been successfully created!');
     }
 
     public function doEditProject(Project $project, Request $request)
     {
-        if(
+        if (
             $project->is('rejected') // rejecte projects cannot be edited
-            ||( $project->is('approved') && !Auth::user()->isRole('admin')) // approved projects can only be edited by admin
-        ){
+            ||($project->is('approved') && ! Auth::user()->isRole('admin')) // approved projects can only be edited by admin
+        ) {
             return redirect()->back();
         }
-        
 
         $rules = [
-            'doi'            => 'nullable|string',
-            'title'          => 'required|string',
+            'doi'             => 'nullable|string',
+            'title'           => 'required|string',
             'author_ids'      => 'required|array',
             'author_ids.*'    => 'required|exists:users,id|distinct',
-            'abstract'       => 'required|string',
-            'adviser_id'     => 'required|exists:users,id',
-            'area_id'        => 'required|exists:areas,id',
-            'panel_ids'      => 'required|array',
-            'panel_ids.*'    => 'required|exists:users,id|distinct',
-            'keywords'       => 'required|string',
-            'pages'          => 'required|integer',
-            'year_published' => 'required|date_format:Y',
-            'file'           => 'nullable|mimes:pdf',
+            'abstract'        => 'required|string',
+            'adviser_id'      => 'required|exists:users,id',
+            'area_id'         => 'required|exists:areas,id',
+            'panel_ids'       => 'required|array',
+            'panel_ids.*'     => 'required|exists:users,id|distinct',
+            'keywords'        => 'required|string',
+            'pages'           => 'required|integer',
+            'year_published'  => 'required|date_format:Y',
+            'file'            => 'nullable|mimes:pdf',
         ];
 
         if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
@@ -153,7 +158,7 @@ class ProjectController extends Controller
 
         \DB::transaction(function () use ($request, $rules, $project) {
             $request->validate($rules);
-            
+
             $project->doi                = $request->input('doi');
             $project->title              = $request->input('title');
             $project->abstract           = $request->input('abstract');
@@ -167,41 +172,35 @@ class ProjectController extends Controller
                 $project->call_number = $request->input('call_number');
                 $project->date_submitted = $request->input('date_submitted');
             }
-    
 
-            if($request->hasFile('file')){
+            if ($request->hasFile('file')) {
                 $project->uploaded_file_path = $request->file('file')->store($request->user()->id, 'public');
                 $this->saveImagePreviews($project->uploaded_file_path);
             }
-            
 
             $project->save();
             $project->panel()->sync($request->input('panel_ids'));
             $project->authors()->sync($request->input('author_ids'));
-
         });
 
-        $redirect = Auth::user()->isRole('student') 
+        $redirect = Auth::user()->isRole('student')
          ? redirect('my-projects')
          : redirect('projects');
 
-         return $redirect->with('message', 'Project has been successfully updated!');
-
+        return $redirect->with('message', 'Project has been successfully updated!');
     }
-
 
     protected function saveImagePreviews($filePath)
     {
         $storagePath  = Storage::disk('public')->getDriver()->getAdapter()->getPathPrefix();
-        $file = new \Imagick($storagePath.$filePath);
-        $lastIndex = $file->getNumberImages() > 5 ? 4 : ($file->getNumberImages() - 1);
-
+        $file         = new \Imagick($storagePath . $filePath);
+        $lastIndex    = $file->getNumberImages() > 5 ? 4 : ($file->getNumberImages() - 1);
 
         foreach (range(0, $lastIndex) as $index) {
             $page = $index + 1;
             $file->setIteratorIndex($index);
             $file->setCompression(\Imagick::COMPRESSION_JPEG);
-            $file->setImageFormat("jpeg");
+            $file->setImageFormat('jpeg');
             $filename = Str::replaceLast('.pdf', "-page-{$page}.jpg", $filePath);
             Storage::disk('public')->put($filename, $file);
         }
@@ -212,11 +211,10 @@ class ProjectController extends Controller
     public function preview(Request $request, Project $project)
     {
         return response()->download(
-            public_path("storage/{$project->uploaded_file_path}"), 
-            sprintf('%s.pdf', Str::snake($project->title)), 
-            [], 
+            public_path("storage/{$project->uploaded_file_path}"),
+            sprintf('%s.pdf', Str::snake($project->title)),
+            [],
             'inline'
         );
     }
-
 }
