@@ -20,7 +20,7 @@ class RegistrationController extends Controller
             'middle_initial' => 'required|string|size:1',
             'birthdate'      => 'required|date',
             'contact_number' => 'required|string|size:11',
-            'username'       => 'required|string|max:200',
+            'username'       => 'required|string|max:200|unique:users',
             'password'       => 'required|string|min:4|confirmed',
         ]);
 

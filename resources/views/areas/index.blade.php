@@ -35,9 +35,9 @@
                                     <td>
                                         <a href="{{ url("areas/{$area->id}/edit") }}" class="mr-2">Edit</a>
 
-                                        <form id="delete-form" action="{{ url("areas/{$area->id}/delete") }}">
+                                        <form class="delete-form" action="{{ url("areas/{$area->id}/delete") }}">
                                             {{ csrf_field() }}
-                                            <a href="#" onclick="confirmDelete()" class="text-danger">Delete
+                                            <a href="#" onclick="confirmDelete(this)" class="text-danger">Delete
                                             </a>
                                         </form>
                                     </td>
@@ -54,10 +54,10 @@
 @endsection
 @push('js')
    <script>
-       function confirmDelete() {
+       function confirmDelete(el) {
         var x = confirm("Are you sure you want to delete?");
             if (x){
-                $("#delete-form").submit();
+                $(el).closest(".delete-form").submit();
             }
             else {
                 return;

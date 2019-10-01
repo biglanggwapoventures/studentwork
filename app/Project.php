@@ -3,12 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class Project extends Model
 {
     const VIEWABLE_NUMBER_OF_PAGES = 5;
+    use SoftDeletes;
 
     protected $fillable = [
         'title',

@@ -217,4 +217,15 @@ class ProjectController extends Controller
             'inline'
         );
     }
+
+    public function doDeleteProject(Project $project)
+    {
+        $project->delete();
+
+        $redirect = Auth::user()->isRole('student')
+         ? redirect('my-projects')
+         : redirect('projects');
+
+         return $redirect->with('message', 'Project has been successfully deleted!');
+    }
 }

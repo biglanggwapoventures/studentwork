@@ -53,6 +53,7 @@
 
                             @if(Auth::user()->isRole('adviser'))
                                 <li class="nav-item">
+
                                     <a class="nav-link" href="{{ url('my-handled-projects') }}">Handled Projects</a>
                                 </li>
                             @endif
@@ -75,13 +76,17 @@
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->firstname }} <span class="caret"></span>
                                 </a>
-
+                                
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">
+                                       My Profile
+                                    </a>
                                     <form id="logout-form" action="{{ url('logout') }}">
                                         <a class="dropdown-item" href="#" onclick="confirmLogout()" class="text-danger">
                                             Logout
                                         </a>
                                     </form>
+                                    
                                 </div>
                             </li>
                         @endguest

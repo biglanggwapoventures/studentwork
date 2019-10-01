@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+
+    use SoftDeletes;
 
     const USER_TYPE_ADMIN = 'admin';
     const USER_TYPE_STUDENT = 'student';

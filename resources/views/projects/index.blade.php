@@ -59,8 +59,15 @@
                                         @if(Auth::user()->isRole('adviser'))
                                             <a href="{{ url("my-handled-projects/{$project->id}") }}" class="mr-2">Review</a>
                                         @else
-                                            <a href="{{ url("projects/{$project->id}/edit") }}" class="mr-2">Edit</a>
-                                            <a href="#" class="text-danger">Delete</a>
+                                            <a href="{{ url("projects/{$project->id}/edit") }}" class="btn btn-info btn-block mb-2">Edit</a>
+                                            @if($project->is('pending'))
+                                                
+                                                <form method="post" action="{{ url("projects/{$project->id}") }}"  onsubmit="javascript: return confirm('Are you sure?')">
+                                                    <button type="submit" class="btn btn-danger  btn-block">Delete</button>
+                                                    @csrf
+                                                    @method('delete')
+                                                </form>
+                                            @endif
                                         @endif
                                         
                                     </td>
