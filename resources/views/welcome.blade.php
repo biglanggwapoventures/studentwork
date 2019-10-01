@@ -89,6 +89,10 @@
                             <dd class="col-md-10">
                                 {{ $project->area->name }}
                             </dd>
+                            <dt class="col-md-2">Call #</dt>
+                            <dd class="col-md-10">
+                                {{ $project->call_number }}
+                            </dd>
                         </dl>
                         <p class="card-text">
                              {{ str_limit($project->abstract, 250) }}

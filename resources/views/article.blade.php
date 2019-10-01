@@ -46,24 +46,24 @@
                                 {{ $project->abstract }}
                             </dd>
                         </dl>
-                        <div class="row">
-                            <div class="col-1">&nbsp;</div>
-                            @forelse($project->getPreviewsFilePath() as $preview)
-                                <div class="col-2 text-center">
-                                    <a data-fancybox="gallery" href="{{ $preview }}">
-                                        <img class="img-fluid border rounded mx-auto" src="{{ $preview }}" alt="{{ $project->title }} preview page {{ $loop->iteration }}" >
-                                    </a>
-                                </div>
-                            @empty
-                                No resource
-                            @endforelse
-                        </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="card">
                 <div class="card-body mt-0">
+                    <h4 class="card-title">Preview</h4>
+                    <div class="row">
+                    @forelse($project->getPreviewsFilePath() as $preview)
+                        <div class="col-6 text-center">
+                            <a data-fancybox="gallery" href="{{ $preview }}">
+                                <img class="img-fluid border rounded mx-auto" src="{{ $preview }}" alt="{{ $project->title }} preview page {{ $loop->iteration }}" >
+                            </a>
+                        </div>
+                    @empty
+                        No resource
+                    @endforelse
+                    </div>
                 </div>
             </div>
         </div>
