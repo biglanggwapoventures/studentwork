@@ -23,6 +23,7 @@ Route::post('login', 'LoginController@doLogin');
 Route::get('logout', 'LogoutController@doLogout');
 
 Route::get('projects', 'ProjectController@showProjectsListPage');
+Route::get('projects/search', 'ProjectController@doSearch');
 Route::post('projects', 'ProjectController@doCreateProject');
 Route::get('projects/create', 'ProjectController@showCreateProjectPage');
 Route::get('projects/{project}/edit', 'ProjectController@showEditProjectPage');

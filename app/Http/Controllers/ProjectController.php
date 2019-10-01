@@ -9,9 +9,9 @@ use App\Project;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
@@ -226,6 +226,28 @@ class ProjectController extends Controller
          ? redirect('my-projects')
          : redirect('projects');
 
-         return $redirect->with('message', 'Project has been successfully deleted!');
+        return $redirect->with('message', 'Project has been successfully deleted!');
+    }
+
+    public function doSearch(Request $request)
+    {
+        if ($term = $request->input('search', null)) {
+            $results = Project::query()
+                ->select('title', 'id')
+                ->where('title', 'like', "%{$term}%")
+                ->where('project_status', '=', 'approved')
+                ->get()
+                ->map(function (Project $project) {
+                    return [
+                        'id'   => $project->id,
+                        'text' => $project->title
+                    ];
+                })
+                ->toArray();
+
+            return compact('results');
+        }
+
+        return response()->json([]);
     }
 }

@@ -3,21 +3,18 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-12 text-center py-5" style="background:url({{ asset('img/bg.jpeg') }}) top center;background-size:cover;height:400px">
+        <div class="col-md-12  py-5" style="background:url({{ asset('img/bg.jpeg') }}) top center;background-size:cover;height:400px">
+            <div class="text-center">
             <img src="{{ asset('img/logo_clean.png') }}" class="img-fluid mx-auto" alt="">
+            </div>
             <form action="{{ url('/') }}" method="get">
                 <div class="row">
                 
-                    <div class="col-sm-8 offset-sm-2 my-5">
+                    <div class="col-8 offset-2 my-5">
                         <div class="input-group">
-                            <select name="q[]" class="form-control form-control-lg select2" multiple>
-                                @foreach($keywords AS $item)
-                                    <option value="{{ $item }}" {{ in_array($item, request()->input('q', []))? 'selected="selected"' : '' }}>{{ $item }}</option>
-                                @endforeach
+                            <select class="form-control form-control-lg" id="select2-ajax-main">
+                                
                             </select>
-                            <div class="input-group-append">
-                                <button class="btn btn-success" type="submit" id="button-addon1">Search</button>
-                            </div>
                         </div>
 
                     </div>
@@ -107,3 +104,23 @@
     </div>
 </div>
 @endsection
+
+@push('js')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#select2-ajax-main').select2({
+            theme: "bootstrap",
+            ajax: {
+                url: "{{ url('projects/search') }}",
+                data: function (params) {
+                    return {search: params.term}
+                },
+            }
+        }).on('select2:select', function () {
+            if($(this).val()){
+                window.location.href = "{{ url('view') }}/" + $(this).val()
+            }
+        });
+    })
+</script>
+@endpush
