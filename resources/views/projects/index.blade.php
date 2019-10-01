@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     List of all projects
+                    @if(!Auth::user()->isRole('adviser'))
                     <a class="btn btn-success px-3" href="{{ url('projects/create') }}">Create new project</a>
+                    @endif
                 </div>
                 <div class="card-body p-0">
                     <table class="table mb-0 table-hover table-striped">
@@ -27,7 +29,11 @@
                             @forelse($projects as $project)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $project->title }}</td>
+                                    <td>
+                                        {{ $project->title }}
+                                        <br>
+                                        <a href="{{ url($project->getPreviewLink()) }}" target="_blank" class="mr-3">Preview</a>
+                                    </td>
                                     <td>
                                         <ol class="pl-3">
                                             <li>{!! $project->authors->implode('fullname', '</li><li>') !!}</li>

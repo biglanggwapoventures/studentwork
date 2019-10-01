@@ -104,8 +104,6 @@
             @yield('content')
         </main>
     </div>
-
-    @stack('js')
 </body>
 @stack('js')
 <script>

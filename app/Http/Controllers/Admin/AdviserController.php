@@ -27,10 +27,10 @@ class AdviserController extends Controller
 
     public function showEditAdviserPage($teacherId)
     {
-        $teacher = User::find($teacherId);
+        $adviser = User::find($teacherId);
 
         return view('advisers.edit', [
-            'teacher' => $teacher
+            'adviser' => $adviser
         ]);
     }
 

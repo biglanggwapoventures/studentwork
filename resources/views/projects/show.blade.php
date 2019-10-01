@@ -73,7 +73,7 @@
 
                         <dt class="col-md-2">Year Published</dt>
                         <dd class="col-md-10">
-                            {{ $project->year }}
+                            {{ $project->year_published }}
                         </dd>
                     </dl>
                     @if($project->is('pending'))
@@ -86,9 +86,8 @@
                                     <div class="form-group">
                                         <label for="">Update status</label>
                                         <select name="project_status"  class="form-control">
-                                            <option value=""></option>
+                                            <option value="">Pending</option>
                                             <option value="approved">Approve</option>
-                                            <option value="rejected">Reject</option>
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-light btn-block">Save</button>

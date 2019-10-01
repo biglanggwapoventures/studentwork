@@ -58,7 +58,7 @@
                                 <select name="adviser_id" class="form-control select2">
                                     <option disabled selected>SELECT YOUR ADVISER</option>
                                     @foreach($faculty AS $adviser)
-                                        <option value="{{ $adviser->id }}" {{ old('adviser_id', $project->adviser_id) == $adviser->id ? 'selected="selected"' : '' }}>{{ $adviser->fullname }}</option>
+                                        <option value="{{ $adviser->id }}" {{ old('adviser_id', $project->adviser_id) == $adviser->id ? 'selected' : '' }}>{{ $adviser->fullname }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -71,7 +71,7 @@
                                         <select name="area_id" class="form-control select2">
                                             <option disabled selected>SELECT AN AREA</option>
                                             @foreach($areas AS $area)
-                                                <option value="{{ $area->id }}" {{ old('area_id', $project->area_id) == $area->id ? 'selected="selected"' : '' }}>{{ $area->name }}</option>
+                                                <option value="{{ $area->id }}" {{ old('area_id', $project->area_id) == $area->id ? 'selected' : '' }}>{{ $area->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -99,7 +99,7 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Panel</label>
                             <div class="col-sm-10">
-                                <select name="panel_ids[]" class="form-control select2" multiple data-maximum-selection-length="3" data-allow-clear="true">
+                                <select name="panel_ids[]" class="form-control select2 panel-ids" multiple data-maximum-selection-length="3" data-allow-clear="true">
                                     <option disabled>SELECT YOUR PANEL</option>
                                     @foreach($faculty AS $panel)
                                         <option value="{{ $panel->id }}" {{ in_array($panel->id, (array)old('panel_ids', $project->panel->pluck('id')->all())) ? 'selected="selected"' : '' }}>{{ $panel->fullname }}</option>
@@ -154,7 +154,6 @@
 @endsection
 
 @push('js')
-
 <script type="text/javascript">
     $(document).ready(function () {
         var uneditable = {{ $project->is('rejected') || ($project->is('approved') && !Auth::user()->isRole('admin'))  ? 'true' : 'false'  }};
@@ -167,7 +166,18 @@
                 })
             $('[type=submit]').remove();
         }
+
+        $('[name=adviser_id]').on('change.select2', function () {
+            var adviserId = $(this).val()
+            if(!adviserId) return;
+            console.log(adviserId)
+            $('.panel-ids').find('option[value="'+adviserId+'"]').attr('disabled', true);
+            // $('.panel-ids').find('option:not([value="'+adviserId+'"])').removeAttr('disabled');
+
+        });
+
+        $('[name=adviser_id]').trigger('change');
+        
     })
 </script>
-
 @endpush

@@ -8,6 +8,7 @@ use App\User;
 use App\Project;
 use Spatie\PdfToImage\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -77,7 +78,7 @@ class ProjectController extends Controller
 
         if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
             $rules += [
-                'call_number'    => 'required|exists:areas,id',
+                'call_number'    => 'required|string|max:255',
                 'date_submitted' => 'required|date|before:tomorrow',
             ];
         }
@@ -94,6 +95,12 @@ class ProjectController extends Controller
             $project->keywords           = $request->input('keywords');
             $project->pages              = $request->input('pages');
             $project->year_published     = $request->input('year_published');
+
+            if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
+                $project->call_number = $request->input('call_number');
+                $project->date_submitted = $request->input('date_submitted');
+            }
+            
             $project->uploaded_file_path =  $request->file('file')->store($request->user()->id, 'public');
 
             $project->save();
@@ -104,7 +111,11 @@ class ProjectController extends Controller
 
         });
 
-        return redirect('projects')->with('message', 'New project has been successfully created!');
+        $redirect = Auth::user()->isRole('student') 
+         ? redirect('my-projects')
+         : redirect('projects');
+
+         return $redirect->with('message', 'New project has been successfully created!');
     }
 
     public function doEditProject(Project $project, Request $request)
@@ -135,7 +146,7 @@ class ProjectController extends Controller
 
         if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
             $rules += [
-                'call_number'    => 'required|exists:areas,id',
+                'call_number'    => 'required|string|max:255',
                 'date_submitted' => 'required|date|before:tomorrow',
             ];
         }
@@ -152,6 +163,12 @@ class ProjectController extends Controller
             $project->pages              = $request->input('pages');
             $project->year_published     = $request->input('year_published');
 
+            if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
+                $project->call_number = $request->input('call_number');
+                $project->date_submitted = $request->input('date_submitted');
+            }
+    
+
             if($request->hasFile('file')){
                 $project->uploaded_file_path = $request->file('file')->store($request->user()->id, 'public');
                 $this->saveImagePreviews($project->uploaded_file_path);
@@ -164,7 +181,12 @@ class ProjectController extends Controller
 
         });
 
-        return redirect('projects')->with('message', 'Project has been successfully updated!');
+        $redirect = Auth::user()->isRole('student') 
+         ? redirect('my-projects')
+         : redirect('projects');
+
+         return $redirect->with('message', 'Project has been successfully updated!');
+
     }
 
 
@@ -185,6 +207,16 @@ class ProjectController extends Controller
         }
 
         return true;
+    }
+
+    public function preview(Request $request, Project $project)
+    {
+        return response()->download(
+            public_path("storage/{$project->uploaded_file_path}"), 
+            sprintf('%s.pdf', Str::snake($project->title)), 
+            [], 
+            'inline'
+        );
     }
 
 }

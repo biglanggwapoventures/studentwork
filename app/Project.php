@@ -82,5 +82,16 @@ class Project extends Model
     {
         return $query->where('project_status', 'approved');
     }
+
+    /**
+     * The project's preview link
+     *
+     * @param boolean $download
+     * @return void
+     */
+    public function getPreviewLink(bool $download = false)
+    {
+        return url("projects/{$this->id}/preview", compact('download'));
+    }
     
 }
