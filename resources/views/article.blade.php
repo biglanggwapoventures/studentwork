@@ -81,7 +81,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#select2-ajax-main').select2({
-            theme: "bootstrap",
+            theme: "bootstrap4",
             ajax: {
                 url: "{{ url('projects/search') }}",
                 data: function (params) {

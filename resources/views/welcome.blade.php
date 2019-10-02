@@ -27,28 +27,37 @@
             <h3 class="my-4">Advanced Search</h3>
             <div class="card ">
                 <div class="card-body">
-                    <form action="">
-                        <div class="form-group">
-                            <label for="">Document Type</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
-                                <label class="form-check-label" for="exampleRadios1">
-                                      Journal
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
-                                <label class="form-check-label" for="exampleRadios2">
-                                    Thesis
-                                </label>
-                            </div>
-                        </div>
+                    <form action="" method="get">
                         <div class="form-group">
                             <label for="">Area</label>
-                            <select name="" id="" class="form-control">
-                                <option value="">** ALL AREAS ** </option>
+                            <select name="areas[]" id="" class="form-control select2" multiple>
                                 @foreach($areas AS $area)
                                     <option value="{{ $area->id }}">{{ $area->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Adviser</label>
+                            <select name="adviser" id="" class="form-control select2">
+                                <option value=""></option>
+                                @foreach($adviser AS $adv)
+                                    <option value="{{ $adv->id }}">{{ $adv->fullname }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Author</label>
+                            <select name="authors[]" id="" class="form-control select2" multiple>
+                                @foreach($student AS $stu)
+                                    <option value="{{ $stu->id }}">{{ $stu->fullname }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Keywords</label>
+                            <select name="keywords[]" id="" class="form-control select2" multiple>
+                                @foreach($keywords AS $keyword)
+                                    <option value="{{ $keyword }}">{{ $keyword }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -109,7 +118,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#select2-ajax-main').select2({
-            theme: "bootstrap",
+            theme: "bootstrap4",
             ajax: {
                 url: "{{ url('projects/search') }}",
                 data: function (params) {
