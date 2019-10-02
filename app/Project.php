@@ -9,12 +9,24 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string $title The title of the project
- * @property int $id The project id
+ * @property int    $id    The project id
  */
 class Project extends Model
 {
     const VIEWABLE_NUMBER_OF_PAGES = 5;
     use SoftDeletes;
+
+    const SEMESTER = [
+        '1' => [
+            'start' => '08-01',
+            'end'   => '12-31'
+        ],
+        '2' => [
+            'start' => '01-01',
+            'end'   => '05-31'
+        ],
+
+    ];
 
     protected $fillable = [
         'title',
@@ -98,4 +110,21 @@ class Project extends Model
     {
         return url("projects/{$this->id}/preview", compact('download'));
     }
+
+    public static function determinePeriod(string $year, ?int $semester = null)
+    {
+        if (is_null($semester)) {
+            return [
+                sprintf('%s-%s', $year, static::SEMESTER['1']['start']),
+                sprintf('%s-%s', ++$year, static::SEMESTER['2']['end'])
+            ];
+        }
+
+        return [
+            sprintf('%s-%s', $year, static::SEMESTER[$semester]['start']),
+            sprintf('%s-%s', $semester === 2 ? ++$year : $year, static::SEMESTER[$semester]['end'])
+        ];
+    }
+
+
 }

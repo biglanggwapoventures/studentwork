@@ -7,8 +7,27 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     List of all projects
+                    <form class="form-inline" metho="get">
+                        <div class="form-group">
+                            <label class="mr-2">Academic Year</label>
+                            <select name="academic_year" id="" class="form-control">
+                                @foreach(range(date('Y'), 1999, -1) as $year)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group ml-2">
+                            <label class="mr-2">Semester</label>
+                            <select name="semester" id="" class="form-control">
+                                <option value="">All</option>
+                                <option value="1">1st Sem</option>
+                                <option value="2">2nd Sem</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-secondary ml-2">Search</button>
+                    </form>
                     @if(!Auth::user()->isRole('adviser'))
-                    <a class="btn btn-success px-3" href="{{ url('projects/create') }}">Create new project</a>
+                        <a class="btn btn-success px-3" href="{{ url('projects/create') }}">Create new project</a>
                     @endif
                 </div>
                 <div class="card-body p-0">
@@ -78,6 +97,9 @@
                     </table>
                 </div>
             </div>
+           <div class="text-center mt-2 d-flex justify-content-center">
+               {{ $projects->appends(request()->all())->links() }}
+           </div>
         </div>
     </div>
 </div>
