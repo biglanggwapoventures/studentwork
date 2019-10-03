@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     List of all projects
-                    <form class="form-inline" metho="get">
+                    <form class="form-inline d-none" metho="get">
                         <div class="form-group">
                             <label class="mr-2">Academic Year</label>
                             <select name="academic_year" id="" class="form-control">

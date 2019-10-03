@@ -19,15 +19,15 @@ class HandledProjectsController extends Controller
 
         $query = Auth::user()->handledProjects()->with(['adviser', 'area', 'authors']);
 
-        if ($validator->passes()) {
-            $dates = Project::determinePeriod(
-                $request->input('academic_year', date('Y')),
-                $request->input('semester', null)
-            );
-            $query = $query->whereBetween('date_submitted', $dates);
-        }
-
-        $projects = $query->paginate(5);
+//        if ($validator->passes()) {
+//            $dates = Project::determinePeriod(
+//                $request->input('academic_year', date('Y')),
+//                $request->input('semester', null)
+//            );
+//            $query = $query->whereBetween('date_submitted', $dates);
+//        }
+//
+//        $projects = $query->paginate(5);
 
 
         return view('projects.index', [
