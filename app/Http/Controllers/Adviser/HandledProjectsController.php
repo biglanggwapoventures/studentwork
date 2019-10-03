@@ -27,7 +27,7 @@ class HandledProjectsController extends Controller
 //            $query = $query->whereBetween('date_submitted', $dates);
 //        }
 //
-//        $projects = $query->paginate(5);
+        $projects = $query->paginate(5);
 
 
         return view('projects.index', [
