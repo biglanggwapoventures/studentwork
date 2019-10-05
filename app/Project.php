@@ -121,8 +121,8 @@ class Project extends Model
         }
 
         return [
-            sprintf('%s-%s', $year, static::SEMESTER[$semester]['start']),
-            sprintf('%s-%s', $semester === 2 ? ++$year : $year, static::SEMESTER[$semester]['end'])
+            sprintf('%s-%s', $semester === 2 ? ++$year : $year, static::SEMESTER[$semester]['start']),
+            sprintf('%s-%s', $year, static::SEMESTER[$semester]['end'])
         ];
     }
 

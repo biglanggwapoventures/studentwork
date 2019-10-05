@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'HomeController@index');
 Route::get('view/{projectId}', 'HomeController@viewProject');
@@ -89,4 +90,8 @@ Route::group(['namespace' => 'Adviser'], function () {
     Route::get('my-handled-projects', 'HandledProjectsController@index');
     Route::get('my-handled-projects/{project}', 'HandledProjectsController@show');
     Route::put('my-handled-projects/{project}', 'HandledProjectsController@update');
+});
+
+Route::group(['prefix' => 'reports'], function () {
+    Route::get('monthly-view', 'User\ReportsController@monthlyViews');
 });

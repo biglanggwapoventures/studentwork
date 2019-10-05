@@ -17,6 +17,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('fancybox/jquery.fancybox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('fontawesome/css/all.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/Chart.min.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
@@ -49,6 +50,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ url('my-projects') }}">My Projects</a>
                                 </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ url('reports/monthly-view') }}">Reports</a>
+                                    </li>
                             @endif
 
                             @if(Auth::user()->isRole('adviser'))

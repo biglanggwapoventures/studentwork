@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Area;
 use App\Project;
+use App\ProjectTraffic;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -45,7 +47,19 @@ class HomeController extends Controller
 
     public function viewProject($projectId)
     {
-        $project = Project::find($projectId);
+        $project = Project::query()->find($projectId);
+
+        try {
+            if (Auth::check()) {
+                ProjectTraffic::query()->create([
+                    'project_id' => $project->id,
+                    'user_id'    => Auth::id()
+                ]);
+            }
+        } catch (\Exception| \Throwable $e) {
+            // fail silently
+        }
+
 
         return view('article', [
             'project' => $project

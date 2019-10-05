@@ -20,15 +20,21 @@ class ProjectController extends Controller
     {
         /** @var Validator $validator */
         $validator = \Validator::make($request->all(), [
-            'academic_year' => 'sometimes|required|date_format:Y',
-            'semester'      => 'sometimes|nullable|in:1,2',
+//            'academic_year' => 'sometimes|required|date_format:Y',
+//            'semester'      => 'sometimes|nullable|in:1,2',
+            'title' => 'sometimes|nullable|string'
         ]);
 
 
         $query = Project::with(['adviser', 'area', 'authors'])
-                        ->when(Auth::user()->isRole(User::USER_TYPE_ADMIN), function (Builder $builder) {
-                            return $builder->where('project_status', '=', 'approved');
-                        });
+                        ->when(Auth::user()->isRole(User::USER_TYPE_ADMIN),
+                            function (Builder $builder) use ($validator) {
+                                return $builder->where('project_status', '=', 'approved')
+                                               ->when((($q = request('title')) && $validator->passes()),
+                                                   function (Builder $query) use ($q) {
+                                                       return $query->where('title', 'like', "%{$q}%");
+                                                   });
+                            });
 
 //
 //        if ($validator->passes()) {
