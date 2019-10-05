@@ -94,4 +94,6 @@ Route::group(['namespace' => 'Adviser'], function () {
 
 Route::group(['prefix' => 'reports'], function () {
     Route::get('monthly-view', 'User\ReportsController@monthlyViews');
+    Route::get('handled-yearly', 'Adviser\ReportsController@handledYearly');
+    Route::get('adviser-yearly', 'Admin\ReportsController@handledYearly');
 });

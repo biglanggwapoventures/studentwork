@@ -16,7 +16,7 @@ class ReportsController extends Controller
     {
         $projects = Auth::user()->projects()->select('projects.id', 'projects.title')->get()->pluck('title', 'id');
         $period   = $this->getCurrentPeriod($request);
-        $data     = [];
+        $data     = collect();
 
         if ($projectId = $request->input('project_id', null)) {
             $data = $this->getData($projectId, $period['period']);
