@@ -104,7 +104,7 @@
                              {{ str_limit($project->abstract, 250) }}
                         </p>
                         <p class="card-text text-muted">
-                            Submitted on: {{ date_create_immutable($project->created_at)->format('F d, Y') }}
+                            Submitted on: {{ date_create_immutable($project->date_submitted)->format('F d, Y') }}
                         </p>
                     </div>
                 @endforeach

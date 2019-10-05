@@ -26,13 +26,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Project Title</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Project Title</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="title" value="{{ old('title') }}" placeholder="Title">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Author(s)</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Author(s)</label>
                             <div class="col-sm-10">
                                 <select name="author_ids[]" class="form-control select2" multiple data-maximum-selection-length="3" data-allow-clear="true">
                                     <option disabled>SELECT AUTHOR(S)</option>
@@ -43,13 +43,13 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Abstract</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Abstract</label>
                             <div class="col-sm-10">
                                 <textarea name="abstract" id="abstract" rows="5" class="form-control">{{ old('abstract') }}</textarea>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Adviser</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Adviser</label>
                             <div class="col-sm-10">
                                 <select name="adviser_id" class="form-control select2">
                                     <option disabled selected>SELECT YOUR ADVISER</option>
@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group row">
-                                    <label class="col-sm-6 col-form-label">Area</label>
+                                    <label class="col-sm-6 col-form-label"><font color="red"> *</font>Area</label>
                                     <div class="col-sm-6">
                                         <select name="area_id" class="form-control select2">
                                             <option disabled selected>SELECT AN AREA</option>
@@ -93,7 +93,7 @@
                             @endif
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Panel</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Panel</label>
                             <div class="col-sm-10">
                                 <select name="panel_ids[]" class="form-control select2" multiple data-maximum-selection-length="3" data-allow-clear="true">
                                     <option disabled>SELECT YOUR PANEL</option>
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Keyword(s)</label>
+                            <label class="col-sm-2 col-form-label"><font color="red"> *</font>Keyword(s)</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" name="keywords" value="{{ old('keywords') }}" placeholder="Title">
                                 <span class="form-text text-muted">Separate each words by commas. (management, digital repository, archiving)</span>
@@ -113,7 +113,7 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="form-group row">
-                                    <label class="col-sm-6 col-form-label">Page(s)</label>
+                                    <label class="col-sm-6 col-form-label"><font color="red"> *</font>Page(s)</label>
                                     <div class="col-sm-6">
                                         <input type="number" class="form-control" name="pages" value="{{ old('pages') }}" placeholder="No. of page(s)">
                                     </div>
@@ -121,7 +121,7 @@
                             </div>
                             <div class="col-sm-4">
                                 <div class="form-group row">
-                                    <label class="col-sm-5 col-form-label">Year Published</label>
+                                    <label class="col-sm-5 col-form-label"><font color="red"> *</font>Year Published</label>
                                     <div class="col-sm-7">
                                         <input type="text" class="form-control" name="year_published" value="{{ old('year_published') }}" placeholder="Year">
                                     </div>

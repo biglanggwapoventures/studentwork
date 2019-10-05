@@ -17,7 +17,7 @@ class RegistrationController extends Controller
         $request->validate([
             'firstname'      => 'required|string|max:200',
             'lastname'       => 'required|string|max:200',
-            'middle_initial' => 'required|string|size:1',
+            'middle_initial' => 'nullable|string|size:1',
             'birthdate'      => 'required|date',
             'contact_number' => 'required|string|size:11',
             'username'       => 'required|string|max:200|unique:users',

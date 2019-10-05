@@ -19,25 +19,25 @@
                     <form method="post" action="{{ url('advisers') }}">
                         {{ csrf_field() }}
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">First Name</label>
+                            <label class="col-sm-3 col-form-label"><font color="red"> *</font>First Name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="firstname" value="{{ old('firstname') }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Last Name</label>
+                            <label class="col-sm-3 col-form-label"><font color="red"> *</font>Last Name</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="lastname" value="{{ old('lastname') }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Middle Initial</label>
+                            <label class="col-sm-3 col-form-label"><font color="red"> *</font>Middle Initial</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="middle_initial" value="{{ old('middle_initial') }}">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-3 col-form-label">Username</label>
+                            <label class="col-sm-3 col-form-label"><font color="red"> *</font>Username</label>
                             <div class="col-sm-9">
                                 <input type="text" class="form-control" name="username" value="{{ old('username') }}">
                             </div>
