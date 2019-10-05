@@ -7,6 +7,7 @@
 
                 <div class="card">
                     <div class="card-body">
+                        @if(Auth::user()->isRole(\App\User::USER_TYPE_ADMIN))
                         <form class="form-inline mb-3" method="get">
 
                             <div class="form-group">
@@ -20,6 +21,7 @@
                             </div>
                             <button type="submit" class="btn btn-secondary ml-2">Go</button>
                         </form>
+                        @endif
                         <canvas id="canvas"></canvas>
                     </div>
                 </div>
