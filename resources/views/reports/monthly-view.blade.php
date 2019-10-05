@@ -9,6 +9,7 @@
                         <div class="form-group">
                             <label class="mr-2">Project</label>
                             <select name="project_id" id="" class="form-control">
+                                <option value=""></option>
                                 @foreach($projects as $id => $title)
                                     <option value="{{ $id }}" {{ request('project_id', null) == $id ? 'selected' : '' }}>{{ $title }}</option>
                                 @endforeach
