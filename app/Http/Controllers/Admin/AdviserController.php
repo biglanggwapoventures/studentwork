@@ -39,7 +39,7 @@ class AdviserController extends Controller
         $request->validate([
             'firstname'      => 'required|string|max:200',
             'lastname'       => 'required|string|max:200',
-            'middle_initial' => 'required|string|size:1',
+            'middle_initial' => 'nullable|string|size:1',
             'username'       => 'required|string|unique:users,username',
         ]);
 

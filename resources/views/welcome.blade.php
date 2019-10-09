@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
     <div class="row justify-content-center">
-        <div class="col-md-12  py-5" style="background:url({{ asset('img/bg.jpeg') }}) top center;background-size:cover;height:400px">
+        <div class="col-md-12  py-5" style="background:url({{ asset('img/books.jpg') }}) top center;background-size:cover;background-repeat: no-repeat; height:350px">
             <div class="text-center">
             <img src="{{ asset('img/logo_clean.png') }}" class="img-fluid mx-auto" alt="">
             </div>
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-2 offset-sm-2">
+        <div class="col-sm-2 offset-sm-0">
             <h3 class="my-4">Advanced Search</h3>
             <div class="card ">
                 <div class="card-body">
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-10">
             <h3 class="my-4">Recent Submissions</h3>
             <div class="card">
                 @foreach($projects as $project)
