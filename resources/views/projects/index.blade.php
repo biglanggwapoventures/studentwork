@@ -39,7 +39,7 @@
                     <div class="card-body p-0">
                         <table class="table mb-0 table-hover table-striped">
                             <thead>
-                            <tr class="bg-primary text-white">
+                            <tr class="bg-success text-white">
                                 <th></th>
                                 <th>Project Title</th>
                                 <th>Authors</th>
@@ -75,8 +75,8 @@
                                     <td>
                                         @if($project->is('pending'))
                                             <span class="d-block badge badge-secondary text-white mb-3">PENDING</span>
-                                        @elseif($project->is('rejected'))
-                                            <span class="d-block badge badge-danger text-white mb-3">REJECTED</span>
+                                      <!--  @elseif($project->is('rejected'))
+                                            <span class="d-block badge badge-danger text-white mb-3">REJECTED</span> -->
                                         @else
                                             <span class="d-block badge badge-success text-white mb-3">APPROVED</span>
                                         @endif
@@ -89,7 +89,7 @@
                                             @if($project->is('pending'))
                                                 <form method="post" action="{{ url("projects/{$project->id}") }}"
                                                       onsubmit="javascript: return confirm('Are you sure?')">
-                                                    <button type="submit" class="btn btn-danger  btn-block">Delete
+                                                    <button type="submit" class="btn btn-danger  btn-block s-2">Delete
                                                     </button>
                                                     @csrf
                                                     @method('delete')

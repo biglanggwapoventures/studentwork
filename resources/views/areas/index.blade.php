@@ -21,7 +21,7 @@
                 <div class="card-body p-0">
                     <table class="table mb-0 table-hover table-striped">
                         <thead>
-                            <tr class="bg-primary text-white">
+                            <tr class="bg-success text-white">
                                 <th></th>
                                 <th>Name</th>
                                 <th></th>

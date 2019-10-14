@@ -3,7 +3,7 @@
 @section('content')
 <div class="container-fluid">
 <div class="row justify-content-center">
-        <div class="col-md-12  py-5" style="background:url({{ asset('img/bg.jpeg') }}) top center;background-size:cover;height:400px">
+        <div class="col-md-12  py-5" style="background:url({{ asset('img/books.jpg') }}) top center;background-size:cover;height:350px">
             <div class="text-center">
             <img src="{{ asset('img/logo_clean.png') }}" class="img-fluid mx-auto" alt="">
             </div>
@@ -23,7 +23,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-5 offset-sm-2">
+        <div class="col-sm-8 offset-sm-0" style="margin-top: 10px">
             <div class="card">
                 <div class="card-body border-bottom">
                         <dl class="row">
@@ -40,6 +40,24 @@
                                     {!! $project->authors->pluck('fullname')->implode('</span><span class="badge badge-secondary mr-1 text-white"><i class="fas fa-user fa-fw"></i>') !!}
                                 </span>
                             </dd>
+                             <dt class="col-md-2">Date Submitted</dt>
+                            <dd class="col-md-10">
+                                <span>
+                                    {{ date_create_immutable($project->date_submitted)->format('F d, Y') }}
+                                </span>
+                            </dd>
+                            <dt class="col-md-2">Call #</dt>
+                            <dd class="col-md-10">
+                                <span>
+                                  {{ $project->call_number }}
+                                </span>
+                            </dd>
+                            <dt class="col-md-2">Area</dt>
+                            <dd class="col-md-10">
+                                <span>
+                                  {{ $project->area->name }}
+                                </span>
+                            </dd>
                             <dt class="col-md-2">Keywords</dt>
                             <dd class="col-md-10">
                                 <span class="badge badge-pill badge-info text-white mr-1">
@@ -54,7 +72,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-4">
             <div class="card">
                 <div class="card-body mt-0">
                     <h4 class="card-title">Preview</h4>
