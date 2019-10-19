@@ -85,29 +85,18 @@
                                     {!! $project->authors->pluck('fullname')->implode('</span><span class="badge badge-secondary mr-1 text-white"><i class="fas fa-user fa-fw"></i>') !!}
                                 </span>
                             </dd>
-                            <dt class="col-md-2">Keywords</dt>
-                            <dd class="col-md-10">
-                                <span class="badge badge-pill badge-info text-white mr-1">
-                                    {!! $project->keywords_collection->implode('</span><span class="badge badge-pill badge-info mr-1 text-white">') !!}
-                                </span>
-                            </dd>
-                            <dt class="col-md-2">Area</dt>
-                            <dd class="col-md-10">
-                                {{ $project->area->name }}
-                            </dd>
-                            <dt class="col-md-2">Call #</dt>
-                            <dd class="col-md-10">
-                                {{ $project->call_number }}
-                            </dd>
                         </dl>
                         <p class="card-text">
-                             {{ str_limit($project->abstract, 250) }}
+                             {{ Illuminate\Support\Str::limit($project->abstract, 250) }}
                         </p>
                         <p class="card-text text-muted">
                             Submitted on: {{ date_create_immutable($project->date_submitted)->format('F d, Y') }}
                         </p>
                     </div>
                 @endforeach
+                <div class="pt-3 d-flex justify-content-center">
+                    {!! $projects->links() !!}
+                </div>
             </div>
         </div>
     </div>

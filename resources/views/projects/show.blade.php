@@ -16,7 +16,6 @@
                     </h5>
                         
                     <dl class="row">
-                        
                         <dt class="col-md-2">Title</dt>
                         <dd class="col-md-10">
                             {{ $project->title }}
@@ -74,6 +73,12 @@
                         <dt class="col-md-2">Year Published</dt>
                         <dd class="col-md-10">
                             {{ $project->year_published }}
+                        </dd>
+
+
+                        <dt class="col-md-2"></dt>
+                        <dd class="col-md-10">
+                            <a class="btn btn-sm btn-info text-white" href="{{ url($project->getPreviewLink()) }}" target="_blank" class="mr-3"><i class="fa fa-file"></i> Preview</a>
                         </dd>
                     </dl>
                     @if($project->is('pending'))

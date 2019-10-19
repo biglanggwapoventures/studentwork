@@ -31,6 +31,7 @@ Route::get('projects/{project}/edit', 'ProjectController@showEditProjectPage');
 Route::put('projects/{project}', 'ProjectController@doEditProject');
 Route::get('projects/{project}/preview', 'ProjectController@preview');
 Route::delete('projects/{project}', 'ProjectController@doDeleteProject');
+Route::get('projects/{project}/print-approval', 'ProjectController@doDeleteProject');
 
 Route::get('profile', 'ProfileController@showProfilePage');
 Route::put('profile', 'ProfileController@doUpdateProfile');

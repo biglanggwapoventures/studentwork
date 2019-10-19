@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Adviser;
 use Auth;
 use App\Http\Controllers\Controller;
 use App\Project;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class HandledProjectsController extends Controller
@@ -15,9 +16,20 @@ class HandledProjectsController extends Controller
         $validator = \Validator::make($request->all(), [
             'academic_year' => 'sometimes|required|date_format:Y',
             'semester'      => 'sometimes|nullable|in:1,2',
-        ]);
+        ]);;
 
-        $query = Auth::user()->handledProjects()->with(['adviser', 'area', 'authors']);
+        /** @var Builder $query */
+        $query = Auth::user()->handledProjects()
+                     ->with(['adviser', 'area', 'authors'])
+                     ->latest()
+                     ->when($q = trim($request->input('title')),
+                         function (Builder $query) use ($q) {
+                             return $query->where('title', 'like', "%{$q}%");
+                         })
+                    ->when(in_array($request->input('status'), ['pending', 'approved']),
+                        function (Builder $query) use ($request) {
+                            return $query->where('project_status', '=', $request->input('status'));
+                        });
 
 //        if ($validator->passes()) {
 //            $dates = Project::determinePeriod(

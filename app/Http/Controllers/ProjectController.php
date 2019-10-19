@@ -22,7 +22,8 @@ class ProjectController extends Controller
         $validator = \Validator::make($request->all(), [
 //            'academic_year' => 'sometimes|required|date_format:Y',
 //            'semester'      => 'sometimes|nullable|in:1,2',
-            'title' => 'sometimes|nullable|string'
+            'title'      => 'sometimes|nullable|string',
+            'adviser_id' => 'sometimes|nullable|int'
         ]);
 
 
@@ -33,6 +34,10 @@ class ProjectController extends Controller
                                                ->when((($q = request('title')) && $validator->passes()),
                                                    function (Builder $query) use ($q) {
                                                        return $query->where('title', 'like', "%{$q}%");
+                                                   })
+                                               ->when((($adviserId = request('adviser_id')) && $validator->passes()),
+                                                   function (Builder $query) use ($adviserId) {
+                                                       return $query->where('adviser_id', '=', $adviserId);
                                                    });
                             });
 
@@ -49,7 +54,15 @@ class ProjectController extends Controller
         $projects = $query->paginate(5);
 
         return view('projects.index', [
-            'projects' => $projects
+            'projects' => $projects,
+            'advisers' => User::query()
+                              ->select('id', 'firstname', 'lastname', 'middle_initial')
+                              ->where('user_role', '=', User::USER_TYPE_ADVISER)
+                              ->orderBy('lastname')
+                              ->get()
+                              ->pluck('fullname', 'id')
+                              ->all()
+
         ]);
     }
 
@@ -131,6 +144,7 @@ class ProjectController extends Controller
             if (Auth::user()->isRole(User::USER_TYPE_ADMIN)) {
                 $project->call_number    = $request->input('call_number');
                 $project->date_submitted = $request->input('date_submitted');
+                $project->project_status = 'approved';
             }
 
             $project->uploaded_file_path = $request->file('file')->store($request->user()->id, 'public');

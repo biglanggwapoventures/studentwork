@@ -37,7 +37,7 @@ class HomeController extends Controller
                            ->where('project_status', 'approved')
                            ->with(['authors', 'area'])
                            ->latest()
-                           ->get();
+                           ->paginate(5);
 
         return view('welcome', array_merge(
             compact('projects'),

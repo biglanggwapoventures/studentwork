@@ -27,6 +27,10 @@
             <div class="card">
                 <div class="card-body border-bottom">
                         <dl class="row">
+                            <dt class="col-md-2">Call #</dt>
+                            <dd class="col-md-10">
+                                {{ $project->call_number }}
+                            </dd>
                             <dt class="col-md-2">Title</dt>
                             <dd class="col-md-10">
                                 <h3 class="card-title mb-0" style="font-size:1.2rem">

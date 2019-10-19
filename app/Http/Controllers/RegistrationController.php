@@ -15,13 +15,15 @@ class RegistrationController extends Controller
     public function doRegister(Request $request)
     {
         $request->validate([
-            'firstname'      => 'required|string|max:200',
+            'firstname'      => 'required|string|max:200|regex:/^[a-zA-Z ]+$/',
             'lastname'       => 'required|string|max:200',
             'middle_initial' => 'nullable|string|size:1',
             'birthdate'      => 'required|date',
             'contact_number' => 'required|string|size:11',
             'username'       => 'required|string|max:200|unique:users',
             'password'       => 'required|string|min:4|confirmed',
+        ], [
+            'firstname.regex' => 'Invalid :attribute.'
         ]);
 
         $user                 = new User();

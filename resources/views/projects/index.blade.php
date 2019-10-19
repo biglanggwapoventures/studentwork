@@ -10,26 +10,53 @@
                         @if(in_array(Auth::user()->user_role, [\App\User::USER_TYPE_ADMIN, \App\User::USER_TYPE_ADVISER]))
                             <form class="form-inline" method="get">
                                 {{--<div class="form-group d-none">--}}
-                                    {{--<label class="mr-2">Academic Year</label>--}}
-                                    {{--<select name="academic_year" id="" class="form-control">--}}
-                                        {{--@foreach(range(date('Y'), 1999, -1) as $year)--}}
-                                            {{--<option value="{{ $year }}">{{ $year }}</option>--}}
-                                        {{--@endforeach--}}
-                                    {{--</select>--}}
+                                {{--<label class="mr-2">Academic Year</label>--}}
+                                {{--<select name="academic_year" id="" class="form-control">--}}
+                                {{--@foreach(range(date('Y'), 1999, -1) as $year)--}}
+                                {{--<option value="{{ $year }}">{{ $year }}</option>--}}
+                                {{--@endforeach--}}
+                                {{--</select>--}}
                                 {{--</div>--}}
                                 {{--<div class="form-group ml-2 d-none">--}}
-                                    {{--<label class="mr-2">Semester</label>--}}
-                                    {{--<select name="semester" id="" class="form-control">--}}
-                                        {{--<option value="">All</option>--}}
-                                        {{--<option value="1">1st Sem</option>--}}
-                                        {{--<option value="2">2nd Sem</option>--}}
-                                    {{--</select>--}}
+                                {{--<label class="mr-2">Semester</label>--}}
+                                {{--<select name="semester" id="" class="form-control">--}}
+                                {{--<option value="">All</option>--}}
+                                {{--<option value="1">1st Sem</option>--}}
+                                {{--<option value="2">2nd Sem</option>--}}
+                                {{--</select>--}}
                                 {{--</div>--}}
                                 <div class="form-group ml-2">
                                     <label class="mr-2">Title</label>
                                     <input type="text" name="title" class="form-control" value="{{ request('title') }}">
                                 </div>
+                                @if(Auth::user()->isRole(\App\User::USER_TYPE_ADVISER))
+                                    <div class="form-group ml-2">
+                                        <label class="mr-2">Status</label>
+                                        <select name="status" id="" class="form-control">
+                                            <option value="">All Projects</option>
+
+                                            <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>
+                                                Pending Projects
+                                            </option>
+                                            <option value="approved" {{ request('status') === 'approved' ? 'selected' : '' }}>
+                                                Approved Projects
+                                            </option>
+                                        </select>
+                                    </div>
+                                @endif
+                                @if(Auth::user()->isRole(\App\User::USER_TYPE_ADMIN))
+                                    <div class="form-group ml-2">
+                                        <label class="mr-2">Adviser</label>
+                                        <select name="adviser_id" id="" class="form-control select2">
+                                            <option value="">*ALL ADVISERS*</option>
+                                            @foreach($advisers AS $id => $name)
+                                                <option value="{{$id}}" {{ (int)request('adviser_id') === (int)$id ? 'selected' : ''}}>{{$name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
                                 <button type="submit" class="btn btn-secondary ml-2">Search</button>
+
                             </form>
                         @endif
                         @if(!Auth::user()->isRole('adviser'))
@@ -83,6 +110,10 @@
 
                                         @if(Auth::user()->isRole('adviser'))
                                             <a href="{{ url("my-handled-projects/{$project->id}") }}" class="mr-2">Review</a>
+                                            @if($project->is('pending'))
+                                                <a href="{{ url("projects/{$project->id}/edit") }}"
+                                                   class="btn btn-info btn-block mb-2">Edit</a>
+                                            @endif
                                         @else
                                             <a href="{{ url("projects/{$project->id}/edit") }}"
                                                class="btn btn-info btn-block mb-2">Edit</a>
